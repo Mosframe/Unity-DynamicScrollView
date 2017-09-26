@@ -92,7 +92,7 @@
 
                 // check scroll bottom
                 var isBottom = false;
-                if( this.viewportSize-this.contentAnchoredPosition >= this.contentSize ) {
+                if( this.viewportSize-this.contentAnchoredPosition >= this.contentSize-this._itemSize*0.5f ) {
                     isBottom = true;
                 }
 
@@ -235,11 +235,11 @@
             viewportRect.offsetMin = new Vector2( 10f, 10f );
             viewportRect.offsetMax = new Vector2(-10f,-10f );
             var viewportImage = viewportRect.GetComponent<Image>();
-            viewportImage.sprite = UnityEditor.AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UIMask.psd");
+            //viewportImage.sprite = UnityEditor.AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UIMask.psd");
             viewportImage.type = Image.Type.Sliced;
             var viewportMask = viewportRect.GetComponent<Mask>();
             viewportMask.showMaskGraphic = false;
-            scrollRect.viewport = viewportRect.GetComponent<RectTransform>();
+            scrollRect.viewport = viewportRect;
 
             // [ ScrollRect / Viewport / Content ]
 
@@ -248,38 +248,12 @@
             if( this._direction == Direction.Horizontal ) contentRect.setSizeFromLeft( 1.0f ); else contentRect.setSizeFromTop( 1.0f );
             var contentRectSize = contentRect.getSize();
             contentRect.setSize( contentRectSize-contentRectSize*0.06f );
-            scrollRect.content = contentRect.GetComponent<RectTransform>();
+            scrollRect.content = contentRect;
 
             // [ ScrollRect / Viewport / Content / PrototypeItem ]
 
-            var prototypeItemRect = new GameObject( "Prototype Item", typeof(RectTransform), typeof(Image), typeof(DynamicScrollViewItemExample) ).GetComponent<RectTransform>();
-            prototypeItemRect.SetParent( contentRect, false );
-            if( this._direction == Direction.Horizontal ) prototypeItemRect.setSizeFromLeft(0.23f); else prototypeItemRect.setSizeFromTop(0.23f);
-            var prototypeItem = prototypeItemRect.GetComponent<DynamicScrollViewItemExample>();
-            var prototypeItemBg = prototypeItemRect.GetComponent<Image>();
-            prototypeItemBg.sprite = UnityEditor.AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
-            prototypeItemBg.type   = Image.Type.Sliced;
-            prototypeItem.background = prototypeItemBg;
-            this.itemPrototype = prototypeItemRect;
+            this.resetPrototypeItem( contentRect );
 
-            // [ ScrollRect / Viewport / Content / PrototypeItem / Title ]
-
-            var prototypeTitleRect = new GameObject( "Title", typeof(RectTransform), typeof(Text) ).GetComponent<RectTransform>();
-            prototypeTitleRect.SetParent( prototypeItemRect, false );
-            prototypeTitleRect.setFullSize();
-            var prototypeTitleSize = prototypeTitleRect.getSize();
-            prototypeTitleRect.setSize( prototypeTitleSize-prototypeTitleSize*0.1f );
-            var title = prototypeTitleRect.GetComponent<Text>();
-            title.fontSize              = 16;
-            title.alignment             = TextAnchor.MiddleCenter;
-            title.horizontalOverflow    = HorizontalWrapMode.Wrap;
-            title.verticalOverflow      = VerticalWrapMode.Truncate;
-            title.color                 = Color.black;
-            title.text                  = "Name000";
-            title.resizeTextForBestFit  = true;
-            title.resizeTextMinSize     = 9;
-            title.resizeTextMaxSize     = 40;
-            prototypeItem.title = title;
 
             // [ ScrollRect / Scrollbar ]
 
@@ -315,9 +289,54 @@
             scrollbarHandleImage.type   = Image.Type.Sliced;
             scrollbar.handleRect = scrollbarHandleRect;
 
+            // [ ScrollRect / ScrollbarHandleSize ]
+
+            var scrollbarHandleSize = scrollRect.GetComponent<ScrollbarHandleSize>();
+            if( scrollbarHandleSize == null ) {
+                scrollbarHandleSize = scrollRect.gameObject.AddComponent<ScrollbarHandleSize>();
+                scrollbarHandleSize.maxSize = 1.0f;
+                scrollbarHandleSize.minSize = 0.1f;
+            }
+
             // [ Layer ]
 
             this.gameObject.setLayer( this.transform.parent.gameObject.layer, true );
+        }
+
+        // reset prototype item 
+
+        protected virtual void resetPrototypeItem( RectTransform contentRect ) {
+
+            // [ ScrollRect / Viewport / Content / PrototypeItem ]
+
+            var prototypeItemRect = new GameObject( "Prototype Item", typeof(RectTransform), typeof(Image), typeof(DynamicScrollViewItemExample) ).GetComponent<RectTransform>();
+            prototypeItemRect.SetParent( contentRect, false );
+            if( this._direction == Direction.Horizontal ) prototypeItemRect.setSizeFromLeft(0.23f); else prototypeItemRect.setSizeFromTop(0.23f);
+            var prototypeItem = prototypeItemRect.GetComponent<DynamicScrollViewItemExample>();
+            var prototypeItemBg = prototypeItemRect.GetComponent<Image>();
+            prototypeItemBg.sprite = UnityEditor.AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
+            prototypeItemBg.type = Image.Type.Sliced;
+            prototypeItem.background = prototypeItemBg;
+            this.itemPrototype = prototypeItemRect;
+
+            // [ ScrollRect / Viewport / Content / PrototypeItem / Title ]
+
+            var prototypeTitleRect = new GameObject( "Title", typeof(RectTransform), typeof(Text) ).GetComponent<RectTransform>();
+            prototypeTitleRect.SetParent( prototypeItemRect, false );
+            prototypeTitleRect.setFullSize();
+            var prototypeTitleSize = prototypeTitleRect.getSize();
+            prototypeTitleRect.setSize( prototypeTitleSize-prototypeTitleSize*0.1f );
+            var title = prototypeTitleRect.GetComponent<Text>();
+            title.fontSize              = 16;
+            title.alignment             = TextAnchor.MiddleCenter;
+            title.horizontalOverflow    = HorizontalWrapMode.Wrap;
+            title.verticalOverflow      = VerticalWrapMode.Truncate;
+            title.color                 = Color.black;
+            title.text                  = "Name000";
+            title.resizeTextForBestFit  = true;
+            title.resizeTextMinSize     = 9;
+            title.resizeTextMaxSize     = 40;
+            prototypeItem.title = title;
         }
         #endif
 
