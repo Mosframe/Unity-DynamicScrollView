@@ -150,6 +150,11 @@
 		    }
 	    }
                 
+        public void insertItem () {
+
+        }
+
+
         // refresh
 
         private void refresh() {
@@ -200,6 +205,7 @@
                 if( item != null ) item.onUpdateItem( index );
 		    }
 	    }
+
 
 
         #region [ Editor ]
