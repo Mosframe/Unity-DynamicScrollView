@@ -7,7 +7,6 @@
 
 namespace Mosframe {
 
-    using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.EventSystems;
     using UnityEngine.UI;
@@ -19,17 +18,62 @@ namespace Mosframe {
 		    Color.green,
 	    };
 
-	    public Image icon;
-	    public Text  title;
-	    public Image background;
+	    public Image    icon;
+	    public Text     title;
+        public Button   button;
+	    public Image    background;
+
+        private int     dataIndex = -1;
+
+        protected override void OnEnable () {
+
+            base.OnEnable();
+            this.button.onClick.AddListener( this.onClick );
+        }
+
+        protected override void OnDisable () {
+
+            base.OnDisable();
+            this.button.onClick.RemoveListener( this.onClick );
+        }
 
         public void onUpdateItem( int index ) {
 
-            if( RealTimeInsertItemExample.data.Count > index ) {
+            if( RealTimeInsertItemExample.I.data.Count > index ) {
 
-                this.title.text         = RealTimeInsertItemExample.data[ index ].name + "(" + index.ToString("000") +")";
-		        this.background.color   = this.colors[Mathf.Abs(index) % this.colors.Length];
-		        this.icon.sprite        = Resources.Load<Sprite>( (Mathf.Abs(index) % 20 + 1).ToString("icon_00") );
+                this.dataIndex = index;
+                this.updateItem();
+            }
+        }
+
+        public void onClick () {
+
+            if( this.dataIndex == -1 ) return;
+            var data = RealTimeInsertItemExample.I.data[ this.dataIndex ];
+            data.on = !data.on;
+
+            this.updateItem();
+        }
+        
+
+        private void updateItem () {
+
+            if( this.dataIndex == -1 ) return;
+
+            var data = RealTimeInsertItemExample.I.data[ this.dataIndex ];
+
+		    this.background.color   = this.colors[Mathf.Abs(this.dataIndex) % this.colors.Length];
+		    this.icon.sprite        = Resources.Load<Sprite>( (Mathf.Abs(this.dataIndex) % 20 + 1).ToString("icon_00") );
+
+            if( data.on ) {
+                this.title.text = data.name + "(" + data.value.ToString("000") +")";
+            } else {
+                this.title.text = data.name + "(" + this.dataIndex.ToString("000") +")";
+            }
+
+            var buttonText = this.button.GetComponentInChildren<Text>();
+            if( buttonText != null ) {
+                buttonText.text = data.on ? "ON" : "OFF";
             }
         }
     }
