@@ -52,6 +52,7 @@
             base.Awake();
 
             var scrollRect      = this.GetComponent<ScrollRect>();
+            scrollRect.scrollSensitivity = 15;
             this._viewportRect  = scrollRect.viewport;
             this._contentRect   = scrollRect.content;
         }

@@ -25,7 +25,7 @@ namespace Mosframe {
         public class CustomData {
 
             public string   name;
-            public int      value;
+            public string   value;
             public bool     on;
         }
 
@@ -52,8 +52,8 @@ namespace Mosframe {
 
             // sample insert
 
-            this.insertItem( 0, new CustomData{ name="data00", value=0, on=false } );
-            this.insertItem( 0, new CustomData{ name="data01", value=1, on=false } );
+            this.insertItem( 0, new CustomData{ name="data00", value="value0", on=true } );
+            this.insertItem( 0, new CustomData{ name="data01", value="value1", on=true } );
 
             // register click event to InsertButton
 
@@ -71,7 +71,7 @@ namespace Mosframe {
 
         public void onClick_InsertButton () {
 
-            this.insertItem( int.Parse(this.indexInput.text), new CustomData{ name=this.titleInput.text, value=int.Parse(this.valueInput.text), on=false } );
+            this.insertItem( int.Parse(this.indexInput.text), new CustomData{ name=this.titleInput.text, value=this.valueInput.text, on=true } );
         }
 
     }

@@ -66,7 +66,7 @@ namespace Mosframe {
 		    this.icon.sprite        = Resources.Load<Sprite>( (Mathf.Abs(this.dataIndex) % 20 + 1).ToString("icon_00") );
 
             if( data.on ) {
-                this.title.text = data.name + "(" + data.value.ToString("000") +")";
+                this.title.text = data.name + "(" + data.value +")";
             } else {
                 this.title.text = data.name + "(" + this.dataIndex.ToString("000") +")";
             }
