@@ -1,47 +1,95 @@
-/**
- * xRichText.cs
+/*
+ * RichText.cs
  * 
  * @author mosframe / https://github.com/mosframe
  * 
  */
 
-namespace Mosframe
-{
+namespace Mosframe {
+
     using System.Text;
 	
 	/// <summary>
-	/// xRichText
+	/// RichText
 	/// </summary>
-	public class RichText
-	{
-        public static string bold       ( object text                   ) { return new StringBuilder("<b>"       ).Append( text  ).Append("</b>").ToString(); }
-        public static string italic     ( object text                   ) { return new StringBuilder("<i>"       ).Append( text  ).Append("</i>").ToString(); }
-        public static string size       ( object text, int      size    ) { return new StringBuilder("<size="    ).Append( size  ).Append(">").Append(text).Append("</size>" ).ToString(); }
-        public static string color      ( object text, string   color   ) { return new StringBuilder("<color="   ).Append( color ).Append(">").Append(text).Append("</color>").ToString(); }
+    
+	public class RichText {
+
+        public class Token {
+
+            public const string Bold    = "b"       ;
+            public const string Italic  = "i"       ;
+            public const string Size    = "size"    ;
+            public const string Color   = "color"   ;
+        }
+
+        public static string Bold       ( object obj                    ) { return Tag( obj, Token.Bold         ); }
+        public static string Italic     ( object obj                    ) { return Tag( obj, Token.Italic       ); }
+        public static string Size       ( object obj, int       size    ) { return Tag( obj, Token.Size , size  ); }
+        public static string Color      ( object obj, string    color   ) { return Tag( obj, Token.Color, color ); }
 
         // fixed colors
 
-        public static string aqua       ( object text ) { return new StringBuilder("<color="   ).Append( HtmlColor.aqua       ).Append(">").Append(text).Append("</color>").ToString(); }
-        public static string black      ( object text ) { return new StringBuilder("<color="   ).Append( HtmlColor.black      ).Append(">").Append(text).Append("</color>").ToString(); }
-        public static string blue       ( object text ) { return new StringBuilder("<color="   ).Append( HtmlColor.blue       ).Append(">").Append(text).Append("</color>").ToString(); }
-        public static string brown      ( object text ) { return new StringBuilder("<color="   ).Append( HtmlColor.brown      ).Append(">").Append(text).Append("</color>").ToString(); }
-        public static string cyan       ( object text ) { return new StringBuilder("<color="   ).Append( HtmlColor.cyan       ).Append(">").Append(text).Append("</color>").ToString(); }
-        public static string darkBlue   ( object text ) { return new StringBuilder("<color="   ).Append( HtmlColor.darkBlue   ).Append(">").Append(text).Append("</color>").ToString(); }
-        public static string green      ( object text ) { return new StringBuilder("<color="   ).Append( HtmlColor.green      ).Append(">").Append(text).Append("</color>").ToString(); }
-        public static string grey       ( object text ) { return new StringBuilder("<color="   ).Append( HtmlColor.grey       ).Append(">").Append(text).Append("</color>").ToString(); }
-        public static string lightBlue  ( object text ) { return new StringBuilder("<color="   ).Append( HtmlColor.lightBlue  ).Append(">").Append(text).Append("</color>").ToString(); }
-        public static string lime       ( object text ) { return new StringBuilder("<color="   ).Append( HtmlColor.lime       ).Append(">").Append(text).Append("</color>").ToString(); }
-        public static string magenta    ( object text ) { return new StringBuilder("<color="   ).Append( HtmlColor.magenta    ).Append(">").Append(text).Append("</color>").ToString(); }
-        public static string maroon     ( object text ) { return new StringBuilder("<color="   ).Append( HtmlColor.maroon     ).Append(">").Append(text).Append("</color>").ToString(); }
-        public static string navy       ( object text ) { return new StringBuilder("<color="   ).Append( HtmlColor.navy       ).Append(">").Append(text).Append("</color>").ToString(); }
-        public static string olive      ( object text ) { return new StringBuilder("<color="   ).Append( HtmlColor.olive      ).Append(">").Append(text).Append("</color>").ToString(); }
-        public static string orange     ( object text ) { return new StringBuilder("<color="   ).Append( HtmlColor.orange     ).Append(">").Append(text).Append("</color>").ToString(); }
-        public static string purple     ( object text ) { return new StringBuilder("<color="   ).Append( HtmlColor.purple     ).Append(">").Append(text).Append("</color>").ToString(); }
-        public static string red        ( object text ) { return new StringBuilder("<color="   ).Append( HtmlColor.red        ).Append(">").Append(text).Append("</color>").ToString(); }
-        public static string silver     ( object text ) { return new StringBuilder("<color="   ).Append( HtmlColor.silver     ).Append(">").Append(text).Append("</color>").ToString(); }
-        public static string teal       ( object text ) { return new StringBuilder("<color="   ).Append( HtmlColor.teal       ).Append(">").Append(text).Append("</color>").ToString(); }
-        public static string white      ( object text ) { return new StringBuilder("<color="   ).Append( HtmlColor.white      ).Append(">").Append(text).Append("</color>").ToString(); }
-        public static string yellow     ( object text ) { return new StringBuilder("<color="   ).Append( HtmlColor.yellow     ).Append(">").Append(text).Append("</color>").ToString(); }
+        public static string Aqua       ( object obj ) { return Tag( obj, Token.Color, HtmlColor.Aqua       ); }
+        public static string Black      ( object obj ) { return Tag( obj, Token.Color, HtmlColor.Black      ); }
+        public static string Blue       ( object obj ) { return Tag( obj, Token.Color, HtmlColor.Blue       ); }
+        public static string Brown      ( object obj ) { return Tag( obj, Token.Color, HtmlColor.Brown      ); }
+        public static string Cyan       ( object obj ) { return Tag( obj, Token.Color, HtmlColor.Cyan       ); }
+        public static string DarkBlue   ( object obj ) { return Tag( obj, Token.Color, HtmlColor.DarkBlue   ); }
+        public static string Green      ( object obj ) { return Tag( obj, Token.Color, HtmlColor.Green      ); }
+        public static string Grey       ( object obj ) { return Tag( obj, Token.Color, HtmlColor.Grey       ); }
+        public static string LightBlue  ( object obj ) { return Tag( obj, Token.Color, HtmlColor.LightBlue  ); }
+        public static string Lime       ( object obj ) { return Tag( obj, Token.Color, HtmlColor.Lime       ); }
+        public static string Magenta    ( object obj ) { return Tag( obj, Token.Color, HtmlColor.Magenta    ); }
+        public static string Maroon     ( object obj ) { return Tag( obj, Token.Color, HtmlColor.Maroon     ); }
+        public static string Navy       ( object obj ) { return Tag( obj, Token.Color, HtmlColor.Navy       ); }
+        public static string Olive      ( object obj ) { return Tag( obj, Token.Color, HtmlColor.Olive      ); }
+        public static string Orange     ( object obj ) { return Tag( obj, Token.Color, HtmlColor.Orange     ); }
+        public static string Purple     ( object obj ) { return Tag( obj, Token.Color, HtmlColor.Purple     ); }
+        public static string Red        ( object obj ) { return Tag( obj, Token.Color, HtmlColor.Red        ); }
+        public static string Silver     ( object obj ) { return Tag( obj, Token.Color, HtmlColor.Silver     ); }
+        public static string Teal       ( object obj ) { return Tag( obj, Token.Color, HtmlColor.Teal       ); }
+        public static string White      ( object obj ) { return Tag( obj, Token.Color, HtmlColor.White      ); }
+        public static string Yellow     ( object obj ) { return Tag( obj, Token.Color, HtmlColor.Yellow     ); }
+
+
+        private static string Tag ( object obj, string token, object attribute=null ) {
+
+            var sb = new StringBuilder();
+            if( obj != null ) {
+                var text = obj.ToString();
+                var texts = text.Split('\n');
+                if( attribute == null ) {
+                    sb.Append("<").Append(token).Append(">").Append( texts[0] ).Append("</").Append(token).Append(">");
+                    for( var i=1; i<texts.Length; ++i ) {
+                        sb.Append("\n<").Append(token).Append(">").Append( texts[i] ).Append("</").Append(token).Append(">");
+                    }
+                } else {
+                    sb.Append("<").Append(token).Append("=").Append(attribute).Append(">").Append( texts[0] ).Append("</").Append(token).Append(">");
+                    for( var i=1; i<texts.Length; ++i ) {
+                        sb.Append("\n<").Append(token).Append("=").Append(attribute).Append(">").Append( texts[i] ).Append("</").Append(token).Append(">");
+                    }
+                }
+            }
+            return sb.ToString();
+        }
+
+
+        public class OpenTags {
+
+            public static string Bold    = string.Format("<{0}>", Token.Bold  );
+            public static string Italic  = string.Format("<{0}>", Token.Italic);
+            public static string Size    = string.Format("<{0}=", Token.Size  );
+            public static string Color   = string.Format("<{0}=", Token.Color );
+        }
+
+        public class CloseTags {
+
+            public static string Bold    = string.Format("</{0}>", Token.Bold  );
+            public static string Italic  = string.Format("</{0}>", Token.Italic);
+            public static string Size    = string.Format("</{0}>", Token.Size  );
+            public static string Color   = string.Format("</{0}>", Token.Color );
+        }
     }
 }
 

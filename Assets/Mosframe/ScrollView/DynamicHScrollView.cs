@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * DynamicHScrollView.cs
  * 
  * @author mosframe / https://github.com/mosframe
@@ -15,36 +15,24 @@
     [AddComponentMenu("UI/Dynamic H Scroll View")]
     public class DynamicHScrollView : DynamicScrollView {
 
-        protected override float contentAnchoredPosition    { get { return this._contentRect.anchoredPosition.x; } set { this._contentRect.anchoredPosition = new Vector2( value, this._contentRect.anchoredPosition.y ); } }
-	    protected override float contentSize                { get { return this._contentRect.rect.width; } }
-	    protected override float viewportSize               { get { return this._viewportRect.rect.width; } }
+        protected override float contentAnchoredPosition    { get { return this.contentRect.anchoredPosition.x; } set { this.contentRect.anchoredPosition = new Vector2( value, this.contentRect.anchoredPosition.y ); } }
+	    protected override float contentSize                { get { return this.contentRect.rect.width; } }
+	    protected override float viewportSize               { get { return this.viewportRect.rect.width; } }
+	    protected override float itemSize                   { get { return this.itemPrototype.rect.width;} }
 
+        public override void init () {
+
+            this.direction = Direction.Horizontal;
+            base.init();
+        }
         protected override void Awake() {
 
             base.Awake();
-            this._direction = Direction.Horizontal;
-            this._itemSize = this.itemPrototype.rect.width;
+            this.direction = Direction.Horizontal;
         }
+        protected override void Start () {
 
-        #region [ Editor ]
-
-        #if UNITY_EDITOR
-
-        [UnityEditor.MenuItem("GameObject/UI/Dynamic H Scroll View")]
-        public static void CreateHorizontal() {
-
-            var go = new GameObject( "Horizontal Scroll View", typeof(RectTransform) );
-            go.transform.SetParent( UnityEditor.Selection.activeTransform, false );
-            go.AddComponent<DynamicHScrollView>();
+            base.Start();
         }
-
-        protected override void Reset() {
-            this._direction = Direction.Horizontal;
-            base.Reset();
-        }
-
-        #endif
-
-        #endregion [ Editor ]
     }
 }

@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * DynamicVScrollView.cs
  * 
  * @author mosframe / https://github.com/mosframe
@@ -15,35 +15,24 @@
     [AddComponentMenu("UI/Dynamic V Scroll View")]
     public class DynamicVScrollView : DynamicScrollView {
 
-        protected override float contentAnchoredPosition    { get { return -this._contentRect.anchoredPosition.y; } set { this._contentRect.anchoredPosition = new Vector2( this._contentRect.anchoredPosition.x, -value ); } }
-	    protected override float contentSize                { get { return this._contentRect.rect.height; } }
-	    protected override float viewportSize               { get { return this._viewportRect.rect.height;} }
+        protected override float contentAnchoredPosition    { get { return -this.contentRect.anchoredPosition.y; } set { this.contentRect.anchoredPosition = new Vector2( this.contentRect.anchoredPosition.x, -value ); } }
+	    protected override float contentSize                { get { return this.contentRect.rect.height; } }
+	    protected override float viewportSize               { get { return this.viewportRect.rect.height;} }
+	    protected override float itemSize                   { get { return this.itemPrototype.rect.height;} }
 
+        public override void init () {
+
+            this.direction = Direction.Vertical;
+            base.init();
+        }
         protected override void Awake() {
 
             base.Awake();
-            this._direction = Direction.Vertical;
-            this._itemSize = this.itemPrototype.rect.height;
+            this.direction = Direction.Vertical;
         }
+        protected override void Start () {
 
-        #region [ Editor ]
-
-        #if UNITY_EDITOR
-
-        [UnityEditor.MenuItem("GameObject/UI/Dynamic V Scroll View")]
-        public static void CreateVertical() {
-
-            var go = new GameObject( "Vertical Scroll View", typeof(RectTransform) );
-            go.transform.SetParent( UnityEditor.Selection.activeTransform, false );
-            go.AddComponent<DynamicVScrollView>();
+            base.Start();
         }
-
-        protected override void Reset() {
-            this._direction = Direction.Vertical;
-            base.Reset();
-        }
-        #endif
-
-        #endregion [ Editor ]
     }
 }

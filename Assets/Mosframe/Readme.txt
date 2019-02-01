@@ -13,3 +13,18 @@ See the following video for detailed instructions.
   https://youtu.be/MqadB-5S0p4
   https://youtu.be/6FnKucaeLqw
   https://youtu.be/MqadB-5S0p4
+
+
+------------------------------------------------------------------
+ History
+------------------------------------------------------------------
+
+v1.4
+- Variable size item support.
+- Refresh support.
+- Support for scrolling by index.
+
+v1.3
+- Update wheel scroll speed up
+- Support Unity 5.3
+
